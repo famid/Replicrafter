@@ -1,0 +1,33 @@
+services:
+  opt-db-app:
+    build: .
+    container_name: opt-db-app
+    command: sh -c "npm run start:dev"
+    ports:
+      - "${EXTERNAL_PORT}:${PORT}" # Map external port to internal port
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/optimization_poc # Use the internal Docker network name 'mongo'
+      - PORT=${PORT}
+    volumes:
+      - .:/app # Sync local directory with container directory
+    depends_on:
+      - mongo # Ensure MongoDB starts before the app
+    networks:
+      - monitoring-network
+
+  mongo:
+    image: mongo:latest
+    container_name: optdb-mongo
+    ports:
+      - "27017:27017" # Expose MongoDB's port
+    volumes:
+      - mongo-data:/data/db # Persist MongoDB data
+    networks:
+      - monitoring-network
+
+volumes:
+  mongo-data:
+
+networks:
+  monitoring-network:
+    name: monitoring-network
