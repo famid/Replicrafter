@@ -9,6 +9,6 @@ scrape_configs:
       - targets: ['prometheus:9090']
 
   # Placeholder for other services
-  - job_name: 'example-service'
+  - job_name: 'opt-db-app'
     static_configs:
-      - targets: ['example-service:3000']  # Replace with actual service endpoint
+      - targets: ['opt-db-app:3000']  # Replace with actual service endpoint

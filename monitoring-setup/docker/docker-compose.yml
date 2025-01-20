@@ -5,9 +5,11 @@ services:
     volumes:
       - ./../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "${PROMETHEUS_PORT}:9090"
+      - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring-network
 
   grafana:
     image: grafana/grafana:latest
@@ -16,9 +18,15 @@ services:
       - ./../grafana/grafana-provisioning:/etc/grafana/provisioning
       - ./../grafana/dashboards:/var/lib/grafana/dashboards
     ports:
-      - "${GRAFANA_PORT}:3000"
+      - "3003:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
+    networks:
+      - monitoring-network
+    
+networks:
+  monitoring-network:
+    name: monitoring-network
